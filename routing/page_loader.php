@@ -3,78 +3,39 @@
  *
  * Pages extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2015 phpBB Limited <https://www.phpbb.com>
+ * @copyright (c) 2025 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
+// phpcs:disable PSR1.Files.SideEffects
 
 namespace phpbb\pages\routing;
 
-use phpbb\db\driver\driver_interface;
-use Symfony\Component\Config\Loader\Loader;
-use Symfony\Component\Routing\Route;
-use Symfony\Component\Routing\RouteCollection;
+use ReflectionMethod;
+use Symfony\Component\Config\Loader\LoaderInterface;
 
 /**
- * Loads routes defined in Page's database.
+ * This code determines which page_loader class to use based on the phpBB version.
+ * It checks if the Symfony LoaderInterface::load() method has a return type,
+ * which indicates Symfony 7+ (phpBB4), otherwise falls back to phpBB3 compatibility.
+ * The conditional is mandatory to ensure we only define the class if it does not
+ * already exist in this request.
+ *
+ * @noinspection PhpMultipleClassDeclarationsInspection
  */
-class page_loader extends Loader
+if (!class_exists(page_loader::class, false))
 {
-	/** @var driver_interface */
-	protected $db;
+	$method = new ReflectionMethod(LoaderInterface::class, 'load');
 
-	/** @var string */
-	protected $pages_table;
-
-	/**
-	 * Constructor
-	 *
-	 * @param driver_interface $db          Database connection
-	 * @param string           $pages_table Table name
-	 * @access public
-	 */
-	public function __construct(driver_interface $db, $pages_table)
+	// phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
+	if ($method->hasReturnType())
 	{
-		$this->db          = $db;
-		$this->pages_table = $pages_table;
+		class page_loader extends page_loader_phpbb4 {}
 	}
-
-	/**
-	 * Loads routes defined in Page's database.
-	 *
-	 * @param string      $resource Resource (not used, but required by parent interface)
-	 * @param string|null $type     The resource type
-	 *
-	 * @return RouteCollection A RouteCollection instance
-	 *
-	 * @api
-	 */
-	public function load($resource, $type = null)
+	else
 	{
-		$collection = new RouteCollection();
-
-		$sql = 'SELECT page_id, page_route
-			FROM ' . $this->pages_table;
-		$result = $this->db->sql_query($sql);
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$route = new Route('/' . $row['page_route']);
-			$route->setDefault('_controller', 'phpbb.pages.controller:display');
-			$route->setDefault('route', $row['page_route']);
-			$collection->add('phpbb_pages_dynamic_route_' . $row['page_id'], $route);
-		}
-		$this->db->sql_freeresult();
-
-		return $collection;
+		class page_loader extends page_loader_phpbb3 {}
 	}
-
-	/**
-	 * {@inheritdoc}
-	 *
-	 * @api
-	 */
-	public function supports($resource, $type = null)
-	{
-		return $type === 'phpbb_pages_route';
-	}
+	// phpcs:enable PSR1.Classes.ClassDeclaration.MultipleClasses
 }
+// phpcs:enable PSR1.Files.SideEffects
