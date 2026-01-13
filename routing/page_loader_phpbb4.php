@@ -3,7 +3,7 @@
  *
  * Pages extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2025 phpBB Limited <https://www.phpbb.com>
+ * @copyright (c) 2015, 2025 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -15,7 +15,7 @@ use Symfony\Component\Config\Loader\Loader;
 use Symfony\Component\Routing\RouteCollection;
 
 /**
- * phpbb 4 and Symfony 7 adapter for page loader.
+ * phpBB 4 and Symfony 7 adapter for page loader.
  */
 class page_loader_phpbb4 extends Loader
 {
@@ -53,7 +53,7 @@ class page_loader_phpbb4 extends Loader
 	 * @param string|null $type The type of the resource, or null if not specified.
 	 * @return bool True if the loader supports the resource and type, false otherwise.
 	 */
-	public function supports(mixed $resource, string $type = null): bool
+	public function supports(mixed $resource, ?string $type = null): bool
 	{
 		return $this->core->supportsType($type);
 	}

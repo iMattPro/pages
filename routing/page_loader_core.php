@@ -3,7 +3,7 @@
  *
  * Pages extension for the phpBB Forum Software package.
  *
- * @copyright (c) 2015 phpBB Limited <https://www.phpbb.com>
+ * @copyright (c) 2015, 2025 phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -58,7 +58,7 @@ class page_loader_core
 			$route->setDefault('route', $row['page_route']);
 			$collection->add('phpbb_pages_dynamic_route_' . $row['page_id'], $route);
 		}
-		$this->db->sql_freeresult();
+		$this->db->sql_freeresult($result);
 
 		return $collection;
 	}
