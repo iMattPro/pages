@@ -47,7 +47,7 @@ class page_loader_phpbb3 extends Loader
 		{
 			throw new InvalidArgumentException('Type must be string or null');
 		}
-		return $this->core->loadRoutes();
+		return $this->core->load_routes();
 	}
 
 	/**
@@ -59,6 +59,6 @@ class page_loader_phpbb3 extends Loader
 	 */
 	public function supports($resource, $type = null): bool
 	{
-		return $this->core->supportsType($type);
+		return $this->core->supports_type($type);
 	}
 }

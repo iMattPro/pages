@@ -41,10 +41,8 @@ class page_loader_core
 	 * Loads routes defined in Page's database.
 	 *
 	 * @return RouteCollection A RouteCollection instance
-	 *
-	 * @api
 	 */
-	public function loadRoutes(): RouteCollection
+	public function load_routes(): RouteCollection
 	{
 		$collection = new RouteCollection();
 
@@ -69,7 +67,7 @@ class page_loader_core
 	 * @param mixed $type The type to check support for.
 	 * @return bool True if the type is supported, false otherwise.
 	 */
-	public function supportsType($type): bool
+	public function supports_type($type): bool
 	{
 		return $type === 'phpbb_pages_route';
 	}

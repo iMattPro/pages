@@ -43,7 +43,7 @@ class page_loader_phpbb4 extends Loader
 	 */
 	public function load(mixed $resource, ?string $type = null): RouteCollection
 	{
-		return $this->core->loadRoutes();
+		return $this->core->load_routes();
 	}
 
 	/**
@@ -55,6 +55,6 @@ class page_loader_phpbb4 extends Loader
 	 */
 	public function supports(mixed $resource, ?string $type = null): bool
 	{
-		return $this->core->supportsType($type);
+		return $this->core->supports_type($type);
 	}
 }
