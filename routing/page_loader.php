@@ -14,6 +14,11 @@ namespace phpbb\pages\routing;
 use ReflectionMethod;
 use Symfony\Component\Config\Loader\LoaderInterface;
 
+if (!defined('IN_PHPBB'))
+{
+	exit;
+}
+
 /**
  * This code determines which page_loader class to use based on the phpBB version.
  * It checks if the Symfony LoaderInterface::load() method has a return type,
