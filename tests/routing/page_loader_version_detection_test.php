@@ -10,8 +10,7 @@
 
 namespace phpbb\pages\tests\routing;
 
-use ReflectionMethod;
-use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 class page_loader_version_detection_test extends \phpbb_test_case
 {
@@ -27,33 +26,28 @@ class page_loader_version_detection_test extends \phpbb_test_case
 
 	public function test_page_loader_extends_correct_adapter()
 	{
-		$method = new ReflectionMethod(LoaderInterface::class, 'load');
-
-		if ($method->hasReturnType())
+		if (version_compare(Kernel::VERSION, '7.0.0', '>='))
 		{
 			self::assertInstanceOf(\phpbb\pages\routing\page_loader_phpbb4::class,
 				new \phpbb\pages\routing\page_loader($this->createMock(\phpbb\db\driver\driver_interface::class), 'test_table'),
-				'page_loader should extend page_loader_phpbb4 when LoaderInterface::load() has return type (Symfony 7/phpBB4)'
+				'page_loader should extend page_loader_phpbb4 when Symfony >= 7.0 (phpBB4)'
 			);
 		}
 		else
 		{
 			self::assertInstanceOf(\phpbb\pages\routing\page_loader_phpbb3::class,
 				new \phpbb\pages\routing\page_loader($this->createMock(\phpbb\db\driver\driver_interface::class), 'test_table'),
-				'page_loader should extend page_loader_phpbb3 when LoaderInterface::load() has no return type (Symfony 3-6/phpBB3)'
+				'page_loader should extend page_loader_phpbb3 when Symfony < 7.0 (phpBB3)'
 			);
 		}
 	}
 
 	public function test_version_detection_logic()
 	{
-		$method = new ReflectionMethod(LoaderInterface::class, 'load');
-		$hasReturnType = $method->hasReturnType();
-
 		$reflection = new \ReflectionClass(\phpbb\pages\routing\page_loader::class);
 		$parent = $reflection->getParentClass();
 
-		if ($hasReturnType)
+		if (version_compare(Kernel::VERSION, '7.0.0', '>='))
 		{
 			self::assertSame(\phpbb\pages\routing\page_loader_phpbb4::class, $parent->getName(),
 				'Symfony 7+ detected: page_loader must extend page_loader_phpbb4'

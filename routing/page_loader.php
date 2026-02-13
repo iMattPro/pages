@@ -11,8 +11,7 @@
 
 namespace phpbb\pages\routing;
 
-use ReflectionMethod;
-use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 if (!defined('IN_PHPBB'))
 {
@@ -20,20 +19,15 @@ if (!defined('IN_PHPBB'))
 }
 
 /**
- * This code determines which page_loader class to use based on the phpBB version.
- * It checks if the Symfony LoaderInterface::load() method has a return type,
- * which indicates Symfony 7+ (phpBB4), otherwise falls back to phpBB3 compatibility.
- * The conditional is mandatory to ensure we only define the class if it does not
- * already exist in this request.
+ * This code determines which page_loader class to use based on the Symfony version.
+ * Symfony 7+ (phpBB4) uses page_loader_phpbb4, otherwise page_loader_phpbb3.
  *
  * @noinspection PhpMultipleClassDeclarationsInspection
  */
 if (!class_exists(page_loader::class, false))
 {
-	$method = new ReflectionMethod(LoaderInterface::class, 'load');
-
 	// phpcs:disable PSR1.Classes.ClassDeclaration.MultipleClasses
-	if ($method->hasReturnType())
+	if (version_compare(Kernel::VERSION, '7.0.0', '>='))
 	{
 		class page_loader extends page_loader_phpbb4 {}
 	}

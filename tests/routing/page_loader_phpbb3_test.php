@@ -10,8 +10,7 @@
 
 namespace phpbb\pages\tests\routing;
 
-use ReflectionMethod;
-use Symfony\Component\Config\Loader\LoaderInterface;
+use Symfony\Component\HttpKernel\Kernel;
 
 class page_loader_phpbb3_test extends \phpbb_database_test_case
 {
@@ -35,8 +34,7 @@ class page_loader_phpbb3_test extends \phpbb_database_test_case
 	{
 		parent::setUp();
 
-		$method = new ReflectionMethod(LoaderInterface::class, 'load');
-		if ($method->hasReturnType())
+		if (version_compare(Kernel::VERSION, '7.0.0', '>='))
 		{
 			self::markTestSkipped('phpbb3 adapter tests only run on Symfony 3-6 (phpBB3)');
 		}
