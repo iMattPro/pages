@@ -48,15 +48,21 @@ class admin_controller_test extends pages_functional_base
 	*/
 	public function test_acp_purge_icons()
 	{
+		// Let the web server create the cache file. On Windows, PHPUnit and IIS
+		// run as different users, so IIS cannot reliably delete a CLI-created file.
+		$this->create_page('Icon Cache Test Page', 'Icon cache test page');
+		self::request('GET', 'index.php');
+
 		$cache = $this->get_cache_driver();
-		$cache->put('_pages_icons', array('cached'));
+		$cached_icons = $cache->get('_pages_icons');
+		self::assertIsArray($cached_icons);
 
 		// A request without a valid form key must not purge the icon cache
 		$crawler = self::request('POST', "adm/index.php?i=\\phpbb\\pages\\acp\\pages_module&mode=manage&action=purge_icons&sid={$this->sid}");
 		$this->assertContainsLang('FORM_INVALID', $crawler->filter('.errorbox')->text());
 		$cache->unload();
 		$cache->load();
-		self::assertSame(array('cached'), $cache->get('_pages_icons'));
+		self::assertSame($cached_icons, $cache->get('_pages_icons'));
 
 		// Submitting the purge form with its form key clears the icon cache
 		$crawler = self::request('GET', "adm/index.php?i=\\phpbb\\pages\\acp\\pages_module&mode=manage&sid={$this->sid}");
