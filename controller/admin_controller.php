@@ -218,6 +218,7 @@ class admin_controller implements admin_interface
 			'bbcode'					=> $this->request->variable('parse_bbcode', false),
 			'magic_url'					=> $this->request->variable('parse_magic_url', false),
 			'smilies'					=> $this->request->variable('parse_smilies', false),
+			'markdown'					=> $this->request->variable('parse_markdown', false),
 			'html'						=> $this->request->variable('parse_html', false),
 			'page_template'				=> $this->request->variable('page_template', ''),
 			'page_links'				=> $this->request->variable('page_links', array(0)),
@@ -236,6 +237,7 @@ class admin_controller implements admin_interface
 			'bbcode'	=> $submit ? $data['bbcode'] : ($entity->get_id() ? $entity->content_bbcode_enabled() : 1),
 			'magic_url'	=> $submit ? $data['magic_url'] : ($entity->get_id() ? $entity->content_magic_url_enabled() : 1),
 			'smilies'	=> $submit ? $data['smilies'] : ($entity->get_id() ? $entity->content_smilies_enabled() : 1),
+			'markdown'	=> $submit ? $data['markdown'] : ($entity->get_id() ? $entity->content_markdown_enabled() : 0),
 			'html'		=> $submit ? $data['html'] : ($entity->get_id() ? $entity->content_html_enabled() : 0),
 		);
 
@@ -366,6 +368,7 @@ class admin_controller implements admin_interface
 			'S_PARSE_BBCODE_CHECKED'	=> $entity->content_bbcode_enabled(),
 			'S_PARSE_SMILIES_CHECKED'	=> $entity->content_smilies_enabled(),
 			'S_PARSE_MAGIC_URL_CHECKED'	=> $entity->content_magic_url_enabled(),
+			'S_PARSE_MARKDOWN_CHECKED'	=> $entity->content_markdown_enabled(),
 			'S_PARSE_HTML_CHECKED'		=> $entity->content_html_enabled(),
 
 			'BBCODE_STATUS'		=> $this->lang->lang('BBCODE_IS_ON', '<a href="' . $this->helper->route('phpbb_help_bbcode_controller') . '">', '</a>'),

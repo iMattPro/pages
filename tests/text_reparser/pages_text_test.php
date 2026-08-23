@@ -21,6 +21,13 @@ class pages_text_test extends \phpbb_textreparser_test_row_based_plugin
 
 	protected function get_reparser()
 	{
-		return new \phpbb\pages\textreparser\plugins\pages_text($this->db, 'phpbb_pages');
+		$litedown = $this->getMockBuilder('\phpbb\pages\textformatter\litedown')
+			->disableOriginalConstructor()
+			->getMock();
+		$litedown->method('parse')->willReturnCallback(function ($text) {
+			return '<t>' . $text . '</t>';
+		});
+
+		return new \phpbb\pages\textreparser\plugins\pages_text($this->db, 'phpbb_pages', $litedown);
 	}
 }
