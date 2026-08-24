@@ -52,7 +52,6 @@ class pages_text extends \phpbb\textreparser\row_based_plugin
 		}
 
 		$text = \s9e\TextFormatter\Unparser::unparse($record['text']);
-		$text = html_entity_decode($text, ENT_QUOTES, 'UTF-8');
 		$text = $this->litedown->parse(
 			$text,
 			(bool) ($record['options'] & OPTION_FLAG_BBCODE) || $force_bbcode_reparsing,
