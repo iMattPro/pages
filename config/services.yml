@@ -6,6 +6,7 @@ services:
         class: phpbb\pages\controller\admin_controller
         arguments:
             - '@cache.driver'
+            - '@phpbb.pages.routing.route_cache'
             - '@controller.helper'
             - '@language'
             - '@log'
@@ -16,6 +17,13 @@ services:
             - '@service_container'
             - '@dispatcher'
             - '%core.root_path%'
+            - '%core.php_ext%'
+
+    phpbb.pages.routing.route_cache:
+        class: phpbb\pages\routing\route_cache
+        arguments:
+            - '@filesystem'
+            - '%core.cache_dir%'
             - '%core.php_ext%'
 
     phpbb.pages.controller:

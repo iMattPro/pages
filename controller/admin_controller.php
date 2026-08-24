@@ -20,6 +20,9 @@ class admin_controller implements admin_interface
 	/** @var \phpbb\cache\driver\driver_interface */
 	protected $cache;
 
+	/** @var \phpbb\pages\routing\route_cache */
+	protected $route_cache;
+
 	/** @var \phpbb\controller\helper */
 	protected $helper;
 
@@ -60,6 +63,7 @@ class admin_controller implements admin_interface
 	* Constructor
 	*
 	* @param \phpbb\cache\driver\driver_interface $cache            Cache driver interface
+	* @param \phpbb\pages\routing\route_cache     $route_cache      Route cache
 	* @param \phpbb\controller\helper             $helper           Controller helper object
 	* @param \phpbb\language\language             $lang             Language object
 	* @param \phpbb\log\log                       $log              The phpBB log system
@@ -73,9 +77,10 @@ class admin_controller implements admin_interface
 	* @param string                               $php_ext          phpEx
 	* @access public
 	*/
-	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\controller\helper $helper, \phpbb\language\language $lang, \phpbb\log\log $log, \phpbb\pages\operators\page $page_operator, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, ContainerInterface $phpbb_container, \phpbb\event\dispatcher_interface $phpbb_dispatcher, $root_path, $php_ext)
+	public function __construct(\phpbb\cache\driver\driver_interface $cache, \phpbb\pages\routing\route_cache $route_cache, \phpbb\controller\helper $helper, \phpbb\language\language $lang, \phpbb\log\log $log, \phpbb\pages\operators\page $page_operator, \phpbb\request\request $request, \phpbb\template\template $template, \phpbb\user $user, ContainerInterface $phpbb_container, \phpbb\event\dispatcher_interface $phpbb_dispatcher, $root_path, $php_ext)
 	{
 		$this->cache = $cache;
+		$this->route_cache = $route_cache;
 		$this->helper = $helper;
 		$this->lang = $lang;
 		$this->log = $log;
@@ -326,8 +331,8 @@ class admin_controller implements admin_interface
 					$message = 'ACP_PAGES_ADD_SUCCESS';
 				}
 
-				// Purge the cache to refresh route collections
-				$this->cache->purge();
+				// Purge compiled routes so the route collection is rebuilt
+				$this->route_cache->purge();
 
 				// Show user confirmation of the page and provide link back to the previous screen
 				trigger_error($this->lang->lang($message) . adm_back_link($this->u_action));
