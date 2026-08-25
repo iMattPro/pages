@@ -39,7 +39,7 @@ class pages_text_test extends \phpbb_textreparser_test_row_based_plugin
 			->getMock();
 		$litedown->expects(self::once())
 			->method('parse')
-			->with('&lt;script&gt;', false, false, false)
+			->with('&lt;script&gt;', false, false, false, false)
 			->willReturn($stored_text);
 
 		$reparser = new \phpbb\pages\textreparser\plugins\pages_text($this->db, 'phpbb_pages', $litedown);

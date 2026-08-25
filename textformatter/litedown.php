@@ -40,9 +40,10 @@ class litedown
 	 * @param bool   $allow_bbcode  Allow BBCode
 	 * @param bool   $allow_urls    Allow magic URLs
 	 * @param bool   $allow_smilies Allow smilies
+	 * @param bool   $decode_entities Decode request-escaped HTML entities
 	 * @return string Parsed XML
 	 */
-	public function parse($text, $allow_bbcode, $allow_urls, $allow_smilies)
+	public function parse($text, $allow_bbcode, $allow_urls, $allow_smilies, $decode_entities = true)
 	{
 		/** @var \phpbb\textformatter\s9e\parser $parser */
 		$parser = $this->container->get('phpbb.pages.text_formatter.parser');
@@ -62,7 +63,7 @@ class litedown
 			'max_urls'       => $this->config['max_post_urls'],
 		));
 
-		return $parser->parse(html_entity_decode($text, ENT_QUOTES));
+		return $parser->parse($decode_entities ? html_entity_decode($text, ENT_QUOTES) : $text);
 	}
 
 	/**

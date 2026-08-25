@@ -41,6 +41,29 @@ class litedown_test extends \phpbb_test_case
 	}
 
 	/**
+	 * Entity decoding can be skipped for text already recovered from stored XML
+	 */
+	public function test_parse_without_entity_decoding()
+	{
+		$parser = $this->getMockBuilder('\phpbb\textformatter\s9e\parser')
+			->disableOriginalConstructor()
+			->getMock();
+		$parser->expects(self::once())
+			->method('parse')
+			->with('&lt;script&gt;')
+			->willReturn('<t>&amp;lt;script&amp;gt;</t>');
+
+		$container = $this->createMock('\Symfony\Component\DependencyInjection\ContainerInterface');
+		$container->method('get')->willReturn($parser);
+
+		$litedown = new \phpbb\pages\textformatter\litedown($container, new \phpbb\config\config(array()));
+		self::assertSame(
+			'<t>&amp;lt;script&amp;gt;</t>',
+			$litedown->parse('&lt;script&gt;', false, false, false, false)
+		);
+	}
+
+	/**
 	 * Renderer is resolved lazily and restores censor state
 	 */
 	public function test_render()

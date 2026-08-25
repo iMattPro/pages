@@ -56,7 +56,8 @@ class pages_text extends \phpbb\textreparser\row_based_plugin
 			$text,
 			(bool) ($record['options'] & OPTION_FLAG_BBCODE) || $force_bbcode_reparsing,
 			(bool) ($record['options'] & OPTION_FLAG_LINKS) || $force_bbcode_reparsing,
-			(bool) ($record['options'] & OPTION_FLAG_SMILIES) || $force_bbcode_reparsing
+			(bool) ($record['options'] & OPTION_FLAG_SMILIES) || $force_bbcode_reparsing,
+			false
 		);
 
 		if ($text !== $record['text'] && $this->save_changes)
